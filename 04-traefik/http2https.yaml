@@ -1,0 +1,31 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: force-secure
+  namespace: traefik
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: catch-all
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: HostRegexp(`{any:.+}`)
+      kind: Rule
+      middlewares:
+        - name: force-secure
+      services:
+        - name: noop@internal
+          kind: TraefikService

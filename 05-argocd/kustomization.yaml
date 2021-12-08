@@ -1,0 +1,5 @@
+resources:
+  - argocd-install.yaml
+  - argo-applicationset-install.yaml
+  - ingressroute.yaml
+  - data-repos.yaml

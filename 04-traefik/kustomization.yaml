@@ -1,0 +1,18 @@
+resources:
+  - namespace.yaml
+  - crd/traefik.containo.us_ingressroutes.yaml
+  - crd/traefik.containo.us_ingressroutetcps.yaml
+  - crd/traefik.containo.us_ingressrouteudps.yaml
+  - crd/traefik.containo.us_middlewares.yaml
+  - crd/traefik.containo.us_middlewaretcps.yaml
+  - crd/traefik.containo.us_serverstransports.yaml
+  - crd/traefik.containo.us_tlsoptions.yaml
+  - crd/traefik.containo.us_tlsstores.yaml
+  - crd/traefik.containo.us_traefikservices.yaml
+  - crd/kubernetes-crd-rbac.yml
+  - serviceaccount.yaml
+  - http2https.yaml
+# - pv-pvc.yaml
+  - deployment.yaml
+  - dashboard-auth.yaml
+  - ingressroute.yaml
