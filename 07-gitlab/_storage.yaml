@@ -1,0 +1,8 @@
+s3:
+  v4auth: true
+  regionendpoint: "https://minio.apps.gamehost.fi:9000"
+  pathstyle: true
+  region: us-east-1
+  bucket: registry
+  accesskey: gitlab
+  secretkey: 75CkVM5fSnhzujwCUrtcvRetRbejzR

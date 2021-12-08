@@ -1,0 +1,8 @@
+resources:
+  - pv.yaml
+  - pvc.yaml
+# External Minio
+  - registry-storage.yaml
+  - s3-object-storage-connection.yaml
+  - argocd-gitlab.yaml
+  - ingressroute.yaml

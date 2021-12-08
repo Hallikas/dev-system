@@ -8,7 +8,7 @@ echo \
 apt-get update
 
 # Install Docker-CE. Note! This is NOT used by Kubernetes, but may want to use plain docker too.
-apt-get install docker-ce docker-ce-cli containerd.io
+apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Override start parameters, so we can use them from daemon.json
 mkdir /etc/systemd/system/docker.service.d

@@ -15,4 +15,6 @@ resources:
 # - pv-pvc.yaml
   - deployment.yaml
   - dashboard-auth.yaml
+  - tls-set-default.yaml
+  - tls-default.yaml
   - ingressroute.yaml

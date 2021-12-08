@@ -1,0 +1,8 @@
+provider: AWS
+region: us-east-1
+aws_access_key_id: gitlab
+aws_secret_access_key: 75CkVM5fSnhzujwCUrtcvRetRbejzR
+aws_signature_version: 4
+host: minio.apps.gamehost.fi
+endpoint: "https://minio.apps.gamehost.fi:9000"
+path_style: true

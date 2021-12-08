@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  connection: cHJvdmlkZXI6IEFXUwpyZWdpb246IHVzLWVhc3QtMQphd3NfYWNjZXNzX2tleV9pZDogZ2l0bGFiCmF3c19zZWNyZXRfYWNjZXNzX2tleTogNzVDa1ZNNWZTbmh6dWp3Q1VydGN2UmV0UmJlanoKYXdzX3NpZ25hdHVyZV92ZXJzaW9uOiA0Cmhvc3Q6IG1pbmlvLmFwcHMuZ2FtZWhvc3QuZmkKZW5kcG9pbnQ6ICJodHRwczovL21pbmlvLmFwcHMuZ2FtZWhvc3QuZmk6OTAwMCIKcGF0aF9zdHlsZTogdHJ1ZQo=
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: s3-object-storage

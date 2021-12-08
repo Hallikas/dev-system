@@ -1,0 +1,178 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: gitlab
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  source:
+    repoURL: https://charts.gitlab.io/
+    chart: gitlab
+    targetRevision: 5.5.1
+    helm:
+      parameters:
+      - name: global.edition
+        value: ce
+      - name: nginx-ingress.enabled
+        value: "false"
+      - name: global.ingress.enabled
+        value: "false"
+
+      - name: global.hosts.https
+        value: "true"
+      - name: certmanager.install
+        value: "false"
+      - name: "global.ingress.configureCertmanager"
+        value: "false"
+
+      - name: global.hosts.externalIP
+        value: 95.217.162.250
+      - name: global.hosts.domain
+        value: apps.gamehost.fi
+      - name: global.hosts.ssh
+        value: git.gamehost.fi
+      - name: global.hosts.gitlab.name
+        value: "git.gamehost.fi"
+      - name: global.hosts.https
+        value: "true"
+
+      - name: global.time_zone
+        value: "Europe/Helsinki"
+
+      - name: global.smtp.port
+        value: "465"
+      - name: global.smtp.tls
+        value: "true"
+
+      - name: global.email.display_name
+        value: "Gamehost Gitlab"
+      - name: global.email.from
+        value: "gitlab@gamehost.fi"
+      - name: global.email.reply_to
+        value: "no-reply@gamehost.fi"
+      - name: global.email.subject_suffix
+        value: "[Gamehost Git]"
+      - name: global.smtp.address
+        value: "mail.gamehost.fi"
+
+      - name: global.rails.bootsnap.enabled
+        value: "false"
+      - name: upgradeCheck.enabled
+        value: "false"
+
+### MINIO
+      - name: global.minio.enabled
+        value: "false"
+      - name: global.appConfig.object_store.enabled
+        value: "true"
+
+      - name: registry.storage.secret
+        value: registry-storage
+      - name: registry.storage.key
+        value: config
+      - name: global.registry.bucket
+        value: gitlab-registry-storage
+
+      - name: global.appConfig.object_store.connection.secret
+        value: s3-object-storage
+      - name: global.appConfig.lfs.bucket
+        value: gitlab-lfs-storage
+      - name: global.appConfig.artifacts.bucket
+        value: gitlab-artifacts-storage
+      - name: global.appConfig.uploads.bucket
+        value: gitlab-uploads-storage
+      - name: global.appConfig.packages.bucket
+        value: gitlab-packages-storage
+      - name: global.appConfig.backups.bucket
+        value: gitlab-backup-storage
+
+      - name: gitlab.toolbox.backups.objectStorage.config.secret
+        value: registry-storage
+      - name: gitlab.toolbox.backups.objectStorage.config.key
+        value: config
+### /MINIO
+        
+      - name: prometheus.install
+        value: "false"
+      - name: gitlab-runner.install
+        value: "false"
+      - name: toolbox.enabled
+        value: "false"
+
+      - name: registry.enabled
+        value: "true"
+
+      - name: registry.hpa.minReplicas
+        value: "1"
+      - name: registry.hpa.maxReplicas
+        value: "1"
+      - name: gitlab.unicorn.minReplicas
+        value: "1"
+      - name: gitlab.unicorn.maxReplicas
+        value: "1"
+      - name: gitlab.sidekiq.minReplicas
+        value: "1"
+      - name: gitlab.sidekiq.maxReplicas
+        value: "1"
+      - name: gitlab.gitlab-shell.minReplicas
+        value: "1"
+      - name: gitlab.gitlab-shell.maxReplicas
+        value: "1"
+      - name: gitlab.webservice.minReplicas
+        value: "1"
+      - name: gitlab.webservice.maxReplicas
+        value: "1"
+
+      - name: global.appConfig.defaultProjectsFeatures.builds
+        value: "true"
+      - name: global.appConfig.defaultProjectsFeatures.containerRegistry
+        value: "true"
+      - name: global.appConfig.defaultProjectsFeatures.issues
+        value: "true"
+      - name: global.appConfig.defaultProjectsFeatures.mergeRequests
+        value: "true"
+      - name: global.appConfig.defaultProjectsFeatures.snippets
+        value: "true"
+      - name: global.appConfig.defaultProjectsFeatures.wiki
+        value: "true"
+
+      valueFiles:
+      - values.yaml
+      values: |
+        redis:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+
+        # Reduce replica counts, reducing CPU & memory requirements
+        gitlab:
+          webservice:
+            resources:
+              limits:
+                memory: 1.0G
+              requests:
+                cpu: 100m
+                memory: 640M
+
+            workhorse:
+              resources:
+                limits:
+                  memory: 100M
+                requests:
+                  cpu: 10m
+                  memory: 10M
+
+          sidekiq:
+            resources:
+              limits:
+                memory: 1.5G
+              requests:
+                cpu: 50m
+                memory: 625M
