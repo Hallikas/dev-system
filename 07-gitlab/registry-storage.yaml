@@ -1,7 +1,0 @@
-apiVersion: v1
-data:
-  config: czM6CiAgdjRhdXRoOiB0cnVlCiAgcmVnaW9uZW5kcG9pbnQ6ICJodHRwczovL21pbmlvLmFwcHMuZ2FtZWhvc3QuZmk6OTAwMCIKICBwYXRoc3R5bGU6IHRydWUKICByZWdpb246IHVzLWVhc3QtMQogIGJ1Y2tldDogcmVnaXN0cnkKICBhY2Nlc3NrZXk6IGdpdGxhYgogIHNlY3JldGtleTogNzVDa1ZNNWZTbmh6dWp3Q1VydGN2UmV0UmJlanoK
-kind: Secret
-metadata:
-  creationTimestamp: null
-  name: registry-storage
