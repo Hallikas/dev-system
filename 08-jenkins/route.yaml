@@ -1,0 +1,22 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: default
+  name: jenkins
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+  labels:
+    app.kubernetes.io/instance: jenkins
+
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: tls-gamehost
+  routes:
+    - match: Host(`apps.gamehost.fi`) && PathPrefix(`/jenkins`)
+      kind: Rule
+      services:
+        - name: jenkins
+          port: 8280

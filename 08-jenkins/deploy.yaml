@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: default
+  name: jenkins
+  labels:
+    app.kubernetes.io/instance: jenkins
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+#     nodeSelector:
+#       kubernetes.io/hostname: "dev"
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+#         runAsUser: 0
+          runAsGroup: 998
+        ports:
+        - name: http
+          containerPort: 8080
+#         hostPort: 8280
+        - name: agent
+          containerPort: 50000
+#         hostPort: 50000
+        env:
+        - name: JENKINS_OPTS
+          value: "--prefix=/jenkins"
+
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+        - name: etc-ssl
+          mountPath: /etc/ssl
+        - name: docker-socket
+          mountPath: /run/docker.sock
+        - name: data-docker
+          mountPath: /var/jenkins_home
+
+      volumes:
+      - name: tz-config
+        hostPath:
+          path: /etc/localtime
+      - name: etc-ssl
+        hostPath:
+          path: /etc/ssl
+      - name: docker-socket
+        hostPath:
+          path: /run/docker.sock
+      - name: data-docker
+        hostPath:
+          path: /data/kube/jenkins
+          type: DirectoryOrCreate
