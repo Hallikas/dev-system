@@ -15,7 +15,7 @@ spec:
   tls:
     secretName: tls-gamehost
   routes:
-    - match: Host(`dev.gamehost.fi`) && PathPrefix(`/crowd`)
+    - match: Host(`apps.gamehost.fi`) && PathPrefix(`/crowd`)
       kind: Rule
       services:
         - name: crowd

@@ -40,7 +40,7 @@ spec:
           value: "Europe/Helsinki"
 
         - name: ATL_PROXY_NAME
-          value: "dev.gamehost.fi"
+          value: "apps.gamehost.fi"
         - name: ATL_TOMCAT_CONTEXTPATH
           value: "/confluence"
         - name: ATL_PROXY_PORT

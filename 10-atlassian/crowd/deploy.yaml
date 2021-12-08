@@ -32,7 +32,7 @@ spec:
 #         hostPort: 8095
         env:
         - name: ATL_PROXY_NAME
-          value: dev.gamehost.fi
+          value: apps.gamehost.fi
         - name: ATL_PROXY_PORT
           value: "443"
         - name: ATL_TOMCAT_SCHEME

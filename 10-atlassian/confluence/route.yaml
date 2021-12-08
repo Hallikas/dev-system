@@ -15,7 +15,7 @@ spec:
   tls:
     secretName: tls-gamehost
   routes:
-    - match: Host(`dev.gamehost.fi`) && PathPrefix(`/confluence`)
+    - match: Host(`apps.gamehost.fi`) && PathPrefix(`/confluence`)
       kind: Rule
       services:
         - name: confluence
