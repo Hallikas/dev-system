@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: https://charts.gitlab.io/
     chart: gitlab
-    targetRevision: 5.5.1
+    targetRevision: 5.5.2
     helm:
       parameters:
       - name: global.edition
