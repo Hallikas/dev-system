@@ -20,8 +20,8 @@ spec:
       labels:
         app: confluence
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: "dev"
+#     nodeSelector:
+#       kubernetes.io/hostname: "dev"
       containers:
       - name: confluence
         image: atlassian/confluence-server

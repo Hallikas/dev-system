@@ -20,8 +20,8 @@ spec:
       labels:
         app: jira
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: "dev"
+#     nodeSelector:
+#       kubernetes.io/hostname: "dev"
       containers:
       - name: jira
         image: atlassian/jira-software

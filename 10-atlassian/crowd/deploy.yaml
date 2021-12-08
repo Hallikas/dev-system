@@ -20,8 +20,8 @@ spec:
       labels:
         app: crowd
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: "dev"
+#     nodeSelector:
+#       kubernetes.io/hostname: "dev"
       containers:
       - name: crowd
         image: atlassian/crowd
