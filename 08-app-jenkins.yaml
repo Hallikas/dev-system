@@ -11,7 +11,7 @@ spec:
     repoURL: 'https://github.com/Hallikas/dev-system.git'
     path: 08-jenkins
     targetRevision: HEAD
-  project: system
+  project: default
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

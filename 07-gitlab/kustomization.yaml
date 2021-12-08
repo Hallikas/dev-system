@@ -4,5 +4,5 @@ resources:
 # External Minio
   - registry-storage.yaml
   - s3-object-storage-connection.yaml
-  - argocd-gitlab.yaml
+  - app-gitlab.yaml
   - ingressroute.yaml
