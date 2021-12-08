@@ -1,0 +1,22 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: atlassian
+  name: crowd
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+  labels:
+    app.kubernetes.io/instance: crowd
+
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: tls-gamehost
+  routes:
+    - match: Host(`dev.gamehost.fi`) && PathPrefix(`/crowd`)
+      kind: Rule
+      services:
+        - name: crowd
+          port: 8095

@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: atlassian
+  name: jira
+  labels:
+    app.kubernetes.io/instance: jira
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: jira
+  template:
+    metadata:
+      labels:
+        app: jira
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: "dev"
+      containers:
+      - name: jira
+        image: atlassian/jira-software
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+#         hostPort: 8080
+        env:
+        - name: TZ
+          value: "Europe/Helsinki"
+        - name: PG_TZ
+          value: "Europe/Helsinki"
+
+        - name: ATL_PROXY_NAME
+          value: "dev.gamehost.fi"
+        - name: ATL_TOMCAT_CONTEXTPATH
+          value: "/jira"
+        - name: ATL_PROXY_PORT
+          value: "443"
+        - name: ATL_TOMCAT_SCHEME
+          value: "https"
+        - name: ATL_TOMCAT_SECURE
+          value: "false"
+
+        - name: ATL_AUTOLOGIN_COOKIE_AGE
+          value: "2419200"
+
+        - name: JVM_MAXIMUM_MEMORY
+          value: "1024m"
+        - name: JVM_MINIMUM_MEMORY
+          value: "512m"
+        - name: JVM_RESERVED_CODE_CACHE_SIZE
+          value: "128m"
+
+        - name: ATL_TOMCAT_MAXTHREADS
+          value: "50"
+        - name: ATL_DB_POOLMINSIZE
+          value: "10"
+        - name: ATL_DB_POOLMAXSIZE
+          value: "20"
+
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+        - name: mysql-lib
+          mountPath: /opt/atlassian/jira/lib/mysql-connector-java-8.0.22.jar
+        - name: data-docker
+          mountPath: /var/atlassian/application-data/jira
+
+      volumes:
+      - name: tz-config
+        hostPath:
+          path: /etc/localtime
+      - name: mysql-lib
+        hostPath:
+          path: /data/libs/mysql-connector-java-8.0.22.jar
+      - name: data-docker
+        hostPath:
+          path: /data/kube/jira
+          type: DirectoryOrCreate

@@ -1,0 +1,4 @@
+commonLabels:
+  group: atlassian
+resources:
+  - atlassian.yaml

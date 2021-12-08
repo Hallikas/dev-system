@@ -1,0 +1,79 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: atlassian
+  name: crowd
+  labels:
+    app.kubernetes.io/instance: crowd
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: crowd
+  template:
+    metadata:
+      labels:
+        app: crowd
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: "dev"
+      containers:
+      - name: crowd
+        image: atlassian/crowd
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8095
+#         hostPort: 8095
+        env:
+        - name: ATL_PROXY_NAME
+          value: dev.gamehost.fi
+        - name: ATL_PROXY_PORT
+          value: "443"
+        - name: ATL_TOMCAT_SCHEME
+          value: "https"
+        - name: ATL_TOMCAT_SECURE
+          value: "false"
+        - name: ATL_TOMCAT_CONTEXTPATH
+          value: "/crowd"
+        - name: JVM_MAXIMUM_MEMORY
+          value: "512m"
+        - name: JVM_MINIMUM_MEMORY
+          value: "256m"
+        - name: JVM_SUPPORT_RECOMMENDED_ARGS
+          value: "-XX:MaxMetaspaceSize=512m -XX:MaxDirectMemorySize=20m  -Dsynchrony.memory.max=128m"
+
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+        - name: etc-ssl
+          mountPath: /etc/ssl
+        - name: etc-letsencrypt
+          mountPath: /etc/letsencrypt
+        - name: mysql-lib
+          mountPath: /opt/atlassian/crowd/apache-tomcat/lib/mysql-connector-java-8.0.22.jar
+        - name: data-docker
+          mountPath: /var/atlassian/application-data/crowd
+
+      volumes:
+      - name: tz-config
+        hostPath:
+          path: /etc/localtime
+      - name: etc-ssl
+        hostPath:
+          path: /etc/ssl
+      - name: etc-letsencrypt
+        hostPath:
+          path: /etc/letsencrypt
+      - name: mysql-lib
+        hostPath:
+          path: /data/libs/mysql-connector-java-8.0.22.jar
+      - name: data-docker
+        hostPath:
+          path: /data/kube/crowd
+          type: DirectoryOrCreate

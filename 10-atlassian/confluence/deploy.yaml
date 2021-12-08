@@ -1,0 +1,99 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: atlassian
+  name: confluence
+  labels:
+    app.kubernetes.io/instance: confluence
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: confluence
+  template:
+    metadata:
+      labels:
+        app: confluence
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: "dev"
+      containers:
+      - name: confluence
+        image: atlassian/confluence-server
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8090
+#         hostPort: 8090
+        - name: synchrony
+          containerPort: 8091
+#         hostPort: 8091
+        env:
+        - name: TZ
+          value: "Europe/Helsinki"
+        - name: PG_TZ
+          value: "Europe/Helsinki"
+
+        - name: ATL_PROXY_NAME
+          value: "dev.gamehost.fi"
+        - name: ATL_TOMCAT_CONTEXTPATH
+          value: "/confluence"
+        - name: ATL_PROXY_PORT
+          value: "443"
+        - name: ATL_TOMCAT_SCHEME
+          value: "https"
+        - name: ATL_TOMCAT_SECURE
+          value: "false"
+
+        - name: ATL_AUTOLOGIN_COOKIE_AGE
+          value: "2419200"
+
+        - name: JVM_MAXIMUM_MEMORY
+          value: "1024m"
+        - name: JVM_MINIMUM_MEMORY
+          value: "512m"
+
+        - name: ATL_TOMCAT_MAXTHREADS
+          value: "50"
+        - name: ATL_DB_POOLMINSIZE
+          value: "10"
+        - name: ATL_DB_POOLMAXSIZE
+          value: "20"
+
+        - name: CATALINA_OPTS
+          value: "-Dsynchrony.memory.max=512m"
+
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+        - name: etc-ssl
+          mountPath: /etc/ssl
+        - name: etc-letsencrypt
+          mountPath: /etc/letsencrypt
+        - name: mysql-lib
+          mountPath: /opt/atlassian/confluence/confluence/WEB-INF/lib/mysql-connector-java-8.0.22.jar
+        - name: data-docker
+          mountPath: /var/atlassian/application-data/confluence
+
+      volumes:
+      - name: tz-config
+        hostPath:
+          path: /etc/localtime
+      - name: etc-ssl
+        hostPath:
+          path: /etc/ssl
+      - name: etc-letsencrypt
+        hostPath:
+          path: /etc/letsencrypt
+      - name: mysql-lib
+        hostPath:
+          path: /data/libs/mysql-connector-java-8.0.22.jar
+      - name: data-docker
+        hostPath:
+          path: /data/kube/confluence
+          type: DirectoryOrCreate

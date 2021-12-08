@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: atlassian
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: atlassian
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/Hallikas/dev-system.git
+      revision: HEAD
+      directories:
+      - path: 10-atlassian/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+#     syncPolicy:
+#       preserveResourcesOnDeletion: true
+#       automated:
+#         prune: true
+#         selfHeal: true
+      source:
+        repoURL: https://github.com/Hallikas/dev-system.git
+        targetRevision: HEAD
+        path: '{{path}}'
+        directory:
+          jsonnet:
+            extVars:
+            - name: ATL_PROXY_NAME
+              value: dev.gamehost.fi
+            - name: ATL_PROXY_PORT
+              value: "443"
+            - name: ATL_TOMCAT_SCHEME
+              value: https
+            - name: ATL_TOMCAT_SECURE
+              value: "false"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: atlassian

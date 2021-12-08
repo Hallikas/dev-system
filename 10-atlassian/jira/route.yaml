@@ -1,0 +1,22 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: atlassian
+  name: jira
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+  labels:
+    app.kubernetes.io/instance: atlassian
+
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: tls-gamehost
+  routes:
+    - match: Host(`dev.gamehost.fi`) && PathPrefix(`/jira`)
+      kind: Rule
+      services:
+        - name: jira
+          port: 8080
