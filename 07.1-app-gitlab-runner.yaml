@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-runner
+  namespace: argocd
+spec:
+  destination:
+    namespace: gitlab
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: gitlab-runner
+    helm:
+      parameters:
+      - name: imagePullPolicy
+        value: Always
+      values: |
+        gitlabUrl: https://git.gamehost.fi/
+        runnerRegistrationToken: KIpk48yGiYV8AlvZrQyF7ory63wzskYMuvMWO7n0WtfWlQtFdlJUS1URF9zZWXPl
+        concurrent: 3
+    repoURL: http://charts.gitlab.io/
+    targetRevision: 0.35.0

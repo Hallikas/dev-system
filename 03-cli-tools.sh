@@ -2,6 +2,9 @@
 ## ArgoCD CLI
 [ -e /usr/local/bin/argocd ] || (curl -L https://github.com/argoproj/argo-cd/releases/download/v2.1.6/argocd-linux-amd64 -o /usr/local/bin/argocd && chmod 755 /usr/local/bin/argocd)
 
+## Argo (workflows)
+[ -e /usr/local/bin/argo ] || (curl -sL https://github.com/argoproj/argo-workflows/releases/download/v3.2.4/argo-linux-amd64.gz|gzip -d > /usr/local/bin/argo && chmod 755 /usr/local/bin/argo)
+
 ## Minio
 if [ ! -e /usr/local/bin/mc ]; then
 	curl -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc

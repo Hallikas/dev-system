@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: events
+  namespace: argo-events
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`events.apps.gamehost.fi`)
+      kind: Rule
+      services:
+        - name: events-webhook
+          port: 443
+          scheme: https
+  tls:
+    secretName: tls-gamehost

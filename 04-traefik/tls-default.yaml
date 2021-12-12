@@ -1,0 +1,10 @@
+apiVersion: v1
+type: kubernetes.io/tls
+kind: Secret
+metadata:
+  name: tls-default
+  namespace: default
+
+data:
+  tls.crt: ""
+  tls.key: ""

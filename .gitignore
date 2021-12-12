@@ -4,3 +4,4 @@
 07-gitlab/_storage.yaml
 07-gitlab/s3-object-storage-connection.yaml
 07-gitlab/registry-storage.yaml
+tls-gamehost.yaml

@@ -1,0 +1,57 @@
+# Validate Addon
+#kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/stable/manifests/install-validating-webhook.yaml
+## serviceaccount/argo-events-webhook-sa created
+## clusterrole.rbac.authorization.k8s.io/argo-events-webhook created
+## clusterrolebinding.rbac.authorization.k8s.io/argo-events-webhook-binding created
+## service/events-webhook created
+## deployment.apps/events-webhook created
+#
+# Test that validate works, = error
+#cat <<EOF | kubectl create -f -
+#apiVersion: argoproj.io/v1alpha1
+#kind: EventBus
+#metadata:
+#  name: default
+#spec:
+#  nats:
+#    exotic: {}
+#EOF
+
+
+echo TUTORIAL
+echo https://argoproj.github.io/argo-events/tutorials/01-introduction/
+echo
+echo
+exit 
+
+
+
+### TESTING
+# https://argoproj.github.io/argo-events/quick_start/
+# We are going to set up a sensor and event-source for webhook.  The goal is
+# to trigger an Argo workflow upon a HTTP Post request.
+# Note: You will need to have Argo Workflows installed to make this work.
+
+kubectl delete -n argo-events eventbus.argoproj.io/default
+kubectl delete -n argo-events eventsource.argoproj.io/webhook
+
+kubectl delete -n argo-events role.rbac.authorization.k8s.io/operate-workflow-role
+kubectl delete -n argo-events rolebinding.rbac.authorization.k8s.io/operate-workflow-role-binding
+kubectl delete -n argo-events role.rbac.authorization.k8s.io/workflow-role
+kubectl delete -n argo-events rolebinding.rbac.authorization.k8s.io/workflow-role-binding
+
+kubectl delete -n argo-events sensor.argoproj.io/webhook
+
+kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/stable/examples/eventbus/native.yaml
+kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/stable/examples/event-sources/webhook.yaml
+kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/master/examples/rbac/sensor-rbac.yaml
+kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/master/examples/rbac/workflow-rbac.yaml
+
+kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/stable/examples/sensors/webhook.yaml
+
+
+cat <<'EOF'
+kubectl -n argo-events port-forward $(kubectl -n argo-events get pod -l eventsource-name=webhook -o name) 12000:12000 &
+curl -d '{"message":"this is my first webhook"}' -H "Content-Type: application/json" -X POST http://localhost:12000/example
+kubectl -n argo-events get workflows | grep "webhook"
+EOF
