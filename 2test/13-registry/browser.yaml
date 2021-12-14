@@ -1,0 +1,96 @@
+# Registry Browser
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: auth-dashboard
+  namespace: default
+
+spec:
+  basicAuth:
+    secret: registry-htaccess
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: default
+  name: registry-browser
+  labels:
+    app.kubernetes.io/instance: registry-browser
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: registry-browser
+  template:
+    metadata:
+      labels:
+        app: registry-browser
+    spec:
+      containers:
+      - name: registry-browser
+        image: klausmeyer/docker-registry-browser
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: DOCKER_REGISTRY_URL
+          value: "http://registry.gamehost.fi:5000/"
+        - name: NO_SSL_VERIFICATION
+          value: "true"
+        - name: ENV_MODE_BROWSE_ONLY
+          value: "false"
+        - name: ENABLE_DELETE_IMAGES
+          value: "true"
+#       - name: SCRIPT_NAME
+#         value: "/browser"
+#       - name: RAILS_RELATIVE_URL_ROOT
+#         value: "/browser"
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: default
+  name: registry-browser
+  labels:
+    app.kubernetes.io/instance: registry-browser
+
+spec:
+  selector:
+    app: registry-browser
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: default
+  name: registry-browser
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+  labels:
+    app.kubernetes.io/instance: registry-browser
+
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: tls-gamehost
+  routes:
+    - match: Host(`registry.gamehost.fi`) || Host(`registry.apps.gamehost.fi`)
+    # && PathPrefix(`/browser`)
+      kind: Rule
+      services:
+        - name: registry-browser
+          port: 8080
+      middlewares:
+        - name: auth-dashboard

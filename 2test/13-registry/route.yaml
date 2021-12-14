@@ -1,0 +1,23 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: default
+  name: registry
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+  labels:
+    app.kubernetes.io/instance: registry
+
+spec:
+  entryPoints:
+    - registry
+# Serve in http, not https
+# tls:
+#   secretName: tls-gamehost
+  routes:
+    - match: Host(`registry.gamehost.fi`)
+      kind: Rule
+      services:
+        - name: registry
+          port: 5000
