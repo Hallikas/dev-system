@@ -25,7 +25,7 @@ spec:
       containers:
       - name: jenkins
         image: jenkins/jenkins:lts
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         securityContext:
           privileged: true
 #         runAsUser: 0

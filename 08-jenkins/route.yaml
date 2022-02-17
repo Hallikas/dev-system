@@ -15,7 +15,7 @@ spec:
   tls:
     secretName: tls-gamehost
   routes:
-    - match: Host(`apps.gamehost.fi`) && PathPrefix(`/jenkins`)
+    - match: (Host(`apps.gamehost.fi`) || Host(`dev.gamehost.fi`)) && PathPrefix(`/jenkins`)
       kind: Rule
       services:
         - name: jenkins

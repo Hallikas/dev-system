@@ -15,7 +15,7 @@ spec:
   tls:
     secretName: tls-gamehost
   routes:
-    - match: Host(`apps.gamehost.fi`) && PathPrefix(`/jira`)
+    - match: (Host(`apps.gamehost.fi`) || Host(`dev.gamehost.fi`)) && PathPrefix(`/jira`)
       kind: Rule
       services:
         - name: jira
