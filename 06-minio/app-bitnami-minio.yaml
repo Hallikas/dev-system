@@ -19,3 +19,12 @@ spec:
         value: pvc-minio
     repoURL: https://charts.bitnami.com/bitnami
     targetRevision: 9.2.2
+  ignoreDifferences:
+  - group: ""
+    jsonPointers:
+    - /data/root-password
+    kind: Secret
+  - group: "apps"
+    jsonPointers:
+    - /spec/template/metadata/annotations/checksum~credentials-secret
+    kind: Deploy
