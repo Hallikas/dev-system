@@ -16,7 +16,8 @@ spec:
         value: Always
       values: |
         gitlabUrl: https://git.gamehost.fi/
+        certsSecretName: gamehost-crt
         runnerRegistrationToken: KIpk48yGiYV8AlvZrQyF7ory63wzskYMuvMWO7n0WtfWlQtFdlJUS1URF9zZWXPl
-        concurrent: 3
+        concurrent: 1
     repoURL: http://charts.gitlab.io/
     targetRevision: 0.35.0
