@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portainer
+  namespace: argocd
+spec:
+  destination:
+    namespace: portainer
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: portainer
+    helm:
+      parameters:
+      - name: enterpriseEdition.enabled
+        value: "true"
+      - name: service.type
+        value: ClusterIP
+    repoURL: https://portainer.github.io/k8s/
+    targetRevision: 1.0.21
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true

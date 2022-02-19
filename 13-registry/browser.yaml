@@ -86,8 +86,7 @@ spec:
   tls:
     secretName: tls-gamehost
   routes:
-    - match: Host(`registry.gamehost.fi`) || Host(`registry.apps.gamehost.fi`)
-    # && PathPrefix(`/browser`)
+    - match: Host(`registry.apps.gamehost.fi`)
       kind: Rule
       services:
         - name: registry-browser
