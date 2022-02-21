@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: https://charts.gitlab.io/
     chart: gitlab
-    targetRevision: 5.5.2
+    targetRevision: 5.7.3
     helm:
       parameters:
       - name: global.edition
@@ -107,6 +107,12 @@ spec:
 
       - name: registry.enabled
         value: "true"
+      - name: registry.host
+        value: "registry.gamehost.fi"
+      - name: registry.port
+        value: 5000
+#     - name: registry.
+#       value: 
 
       - name: registry.hpa.minReplicas
         value: "1"
