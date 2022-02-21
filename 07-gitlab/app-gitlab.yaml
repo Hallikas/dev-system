@@ -110,9 +110,12 @@ spec:
       - name: registry.host
         value: "registry.gamehost.fi"
       - name: registry.port
-        value: 5000
-#     - name: registry.
-#       value: 
+        value: "5000"
+#     - name: registry.external_url
+#       value: http://registry.gamehost.fi/
+
+# gitlab_rails['gitlab_default_projects_features_container_registry'] = false
+# default_projects_features.container_registry = false
 
       - name: registry.hpa.minReplicas
         value: "1"
